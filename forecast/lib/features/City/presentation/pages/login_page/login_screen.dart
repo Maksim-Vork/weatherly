@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:forecast/features/City/domain/usecase/get_city_usecase.dart';
 import 'package:forecast/features/City/presentation/bloc/city_bloc.dart';
+import 'package:forecast/features/City/presentation/bloc/city_event.dart';
 import 'package:forecast/features/City/presentation/bloc/city_state.dart';
 import 'package:forecast/features/City/presentation/pages/login_page/widgets/error_messege.dart';
+import 'package:forecast/features/Weather/domain/usecase/get_current_weather_usecase.dart';
+import 'package:forecast/features/Weather/presentation/bloc/weather_bloc.dart';
+import 'package:forecast/features/Weather/presentation/bloc/weather_event.dart';
+import 'package:forecast/features/Weather/presentation/pages/weather_page/weather_screen.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  final GetCityUsecase getCityUsecase;
+  final GetCurrentWeatherUsecase getCurrentWeatherUsecase;
+  const LoginScreen({
+    super.key,
+    required this.getCityUsecase,
+    required this.getCurrentWeatherUsecase,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +25,15 @@ class LoginScreen extends StatelessWidget {
       body: BlocBuilder<CityBloc, CityState>(
         builder: (context, state) {
           if (state is CityLoading) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
+          } else if (state is CityFound) {
+            return BlocProvider(
+              create:
+                  (context) =>
+                      WeatherBloc(getCityUsecase, getCurrentWeatherUsecase)
+                        ..add(GetWeatherEvent()),
+              child: WeatherScreen(),
+            );
           } else if (state is CityNotFound) {
             return WelcomScreen();
           } else {
@@ -35,7 +55,7 @@ class WelcomScreen extends StatelessWidget {
       backgroundColor: Color(0xFF5698DE),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(height: 10),
             Column(
@@ -119,7 +139,17 @@ class WelcomScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      BlocProvider.of<CityBloc>(
+                        context,
+                      ).add(AddCityEvent(_controllerCity.text));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => WeatherScreen(),
+                        ),
+                      );
+                    },
                     child: Text(
                       'Войти',
                       style: TextStyle(color: Colors.white, fontSize: 20),
@@ -128,7 +158,7 @@ class WelcomScreen extends StatelessWidget {
                 ),
               ],
             ),
-            Text('0.0.1 version'),
+            Column(children: [Text('0.0.1 version'), SizedBox(height: 10)]),
           ],
         ),
       ),

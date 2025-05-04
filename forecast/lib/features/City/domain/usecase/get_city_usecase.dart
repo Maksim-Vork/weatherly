@@ -1,4 +1,4 @@
-import 'package:forecast/features/AppStart/domain/repository/abstract_city_repository.dart';
+import 'package:forecast/features/City/domain/repository/abstract_city_repository.dart';
 
 class GetCityUsecase {
   final AbstractCityRepository abstractCityRepository;

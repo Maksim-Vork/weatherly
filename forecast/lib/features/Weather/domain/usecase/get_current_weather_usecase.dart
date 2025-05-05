@@ -7,6 +7,8 @@ class GetCurrentWeatherUsecase {
   GetCurrentWeatherUsecase(this.repository);
 
   Future<Weather> call(String city) async {
-    return await repository.getCurrentWeather(city);
+    final Weather weather = await repository.getCurrentWeather(city);
+
+    return weather;
   }
 }

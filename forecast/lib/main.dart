@@ -20,6 +20,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
+  prefs.clear();
 
   final localDataSource = LocalDataSource(prefs: prefs);
   final cityRepository = CityRepository(localDataSource);
@@ -32,21 +33,22 @@ void main() async {
   final getCurrentWeatherUsecase = GetCurrentWeatherUsecase(weatherRepository);
 
   runApp(
-    // DevicePreview(
-    //   enabled: true,
-    //   builder:
-    //       (context) => MyApp(
-    //         saveCityUseCase: saveCityUseCase,
-    //         getCityUseCase: getCityUseCase,
-    //         getCurrentWeatherUsecase: getCurrentWeatherUsecase,
-    //       ),
-    // ),
-    MyApp(
-      saveCityUseCase: saveCityUseCase,
-      getCityUseCase: getCityUseCase,
-      getCurrentWeatherUsecase: getCurrentWeatherUsecase,
+    DevicePreview(
+      enabled: true,
+      builder:
+          (context) => MyApp(
+            saveCityUseCase: saveCityUseCase,
+            getCityUseCase: getCityUseCase,
+            getCurrentWeatherUsecase: getCurrentWeatherUsecase,
+          ),
     ),
   );
+  //   MyApp(
+  //     saveCityUseCase: saveCityUseCase,
+  //     getCityUseCase: getCityUseCase,
+  //     getCurrentWeatherUsecase: getCurrentWeatherUsecase,
+  //   ),
+  // );
 }
 
 class MyApp extends StatelessWidget {
@@ -67,6 +69,7 @@ class MyApp extends StatelessWidget {
           (context) =>
               CityBloc(saveCityUseCase, getCityUseCase)..add(CheckCityEvent()),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: LoginScreen(
           getCityUsecase: getCityUseCase,
           getCurrentWeatherUsecase: getCurrentWeatherUsecase,

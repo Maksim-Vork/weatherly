@@ -6,8 +6,7 @@ import 'package:forecast/features/City/presentation/bloc/city_event.dart';
 import 'package:forecast/features/City/presentation/bloc/city_state.dart';
 import 'package:forecast/features/City/presentation/pages/login_page/widgets/error_messege.dart';
 import 'package:forecast/features/Weather/domain/usecase/get_current_weather_usecase.dart';
-import 'package:forecast/features/Weather/presentation/bloc/weather_bloc.dart';
-import 'package:forecast/features/Weather/presentation/bloc/weather_event.dart';
+
 import 'package:forecast/features/Weather/presentation/pages/weather_page/weather_screen.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -27,15 +26,15 @@ class LoginScreen extends StatelessWidget {
           if (state is CityLoading) {
             return Center(child: CircularProgressIndicator());
           } else if (state is CityFound) {
-            return BlocProvider(
-              create:
-                  (context) =>
-                      WeatherBloc(getCityUsecase, getCurrentWeatherUsecase)
-                        ..add(GetWeatherEvent()),
-              child: WeatherScreen(),
+            return WeatherScreen(
+              getCityUsecase: getCityUsecase,
+              getCurrentWeatherUsecase: getCurrentWeatherUsecase,
             );
           } else if (state is CityNotFound) {
-            return WelcomScreen();
+            return WelcomScreen(
+              getCityUsecase: getCityUsecase,
+              getCurrentWeatherUsecase: getCurrentWeatherUsecase,
+            );
           } else {
             return ErrorMessege();
           }
@@ -46,7 +45,14 @@ class LoginScreen extends StatelessWidget {
 }
 
 class WelcomScreen extends StatelessWidget {
-  WelcomScreen({super.key});
+  final GetCityUsecase getCityUsecase;
+  final GetCurrentWeatherUsecase getCurrentWeatherUsecase;
+  WelcomScreen({
+    super.key,
+    required this.getCityUsecase,
+    required this.getCurrentWeatherUsecase,
+  });
+
   final TextEditingController _controllerCity = TextEditingController();
 
   @override
@@ -146,7 +152,12 @@ class WelcomScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => WeatherScreen(),
+                          builder:
+                              (context) => WeatherScreen(
+                                getCityUsecase: getCityUsecase,
+                                getCurrentWeatherUsecase:
+                                    getCurrentWeatherUsecase,
+                              ),
                         ),
                       );
                     },

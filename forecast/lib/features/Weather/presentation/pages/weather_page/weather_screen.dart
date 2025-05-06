@@ -83,61 +83,58 @@ class HomeSrceen extends StatelessWidget {
           children: [
             SizedBox(height: 55),
             Center(
-              child: SizedBox(
-                child: Column(
-                  children: [
-                    Image.asset(
-                      'assets/img/login_img.png',
-                      width: 139,
-                      height: 151,
-                    ),
-                    SizedBox(
-                      width: 150,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Text(
-                            weather.temperature.toInt().toString(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.network(
+                    'https:${weather.current.condition.icon}',
+                    width: 120,
+                    height: 120,
+                    fit: BoxFit.contain, // было contain
+                    filterQuality: FilterQuality.high,
+                  ),
 
-                            style: TextStyle(
-                              fontSize: 100,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Positioned(
-                            top: 15,
-                            right: 5,
-                            child: Text(
-                              '°',
-                              style: TextStyle(
-                                fontSize: 40,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        weather.current.temperature.toInt().toString(),
+                        style: const TextStyle(
+                          fontSize: 100,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 15),
-                    Text(
-                      '5°/15°',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
+                      const Padding(
+                        padding: EdgeInsets.only(top: 15),
+                        child: Text(
+                          '°',
+                          style: TextStyle(fontSize: 40, color: Colors.white),
+                        ),
                       ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 15),
+                  const Text(
+                    '5°/15°',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
                     ),
-                    SizedBox(height: 5),
-                    Text(
-                      'Гомель',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                      ),
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    weather.nameCity,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             SizedBox(height: 65),
@@ -148,6 +145,48 @@ class HomeSrceen extends StatelessWidget {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(15),
               ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return WeatherHour();
+                  },
+                  separatorBuilder:
+                      (context, index) =>
+                          Container(width: 2, color: Color(0xFFDDDDDD)),
+                  itemCount: 7,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class WeatherHour extends StatelessWidget {
+  const WeatherHour({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 13),
+      child: Center(
+        child: Column(
+          children: [
+            Text('8:00'),
+            Image.network(
+              'https://cdn.weatherapi.com/weather/64x64/day/116.png',
+              width: 30,
+              height: 30,
+              fit: BoxFit.contain, // было contain
+              filterQuality: FilterQuality.high,
+            ),
+            Text(
+              '8°',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
             ),
           ],
         ),

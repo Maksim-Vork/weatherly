@@ -1,5 +1,8 @@
-class Weather {
-  final double temperature;
+import 'package:forecast/features/Weather/domain/entity/current.dart';
 
-  Weather(this.temperature);
+class Weather {
+  final String nameCity;
+  final Current current;
+
+  Weather(this.nameCity, this.current);
 }

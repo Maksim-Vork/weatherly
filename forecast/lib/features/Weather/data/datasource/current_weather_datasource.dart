@@ -9,12 +9,12 @@ class CurrentWeatherDatasource {
   Future<WeatherModel> getCurrentWeather(String city) async {
     try {
       final response = await dioService.get(
-        '/v1/current.json',
+        '/v1/forecast.json',
         queryParams: {
           'key': '6c9aa680e7e54dbdaf1133755250105',
           'q': city,
-
           'lang': 'ru',
+          'days': 7,
         },
       );
       final Map<String, dynamic> json = response.data as Map<String, dynamic>;

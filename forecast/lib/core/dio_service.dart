@@ -10,8 +10,8 @@ class DioService {
     _dio = Dio(
       BaseOptions(
         baseUrl: 'https://api.weatherapi.com',
-        connectTimeout: const Duration(seconds: 10),
-        receiveTimeout: const Duration(seconds: 10),
+        // connectTimeout: const Duration(seconds: 10),
+        // receiveTimeout: const Duration(seconds: 10),
         headers: {
           'Accept': 'application/json',
           if (Platform.isMacOS)
@@ -36,7 +36,7 @@ class DioService {
         requestHeader: true,
         requestBody: true,
         responseHeader: true,
-        responseBody: false,
+        responseBody: true,
         error: true,
       ),
       InterceptorsWrapper(
@@ -63,7 +63,6 @@ class DioService {
       final response = await _dio.get(endpoint, queryParameters: queryParams);
       return response;
     } on DioException catch (e) {
-      // Детализированная обработка ошибок
       if (e.response != null) {
         throw Exception('Ошибка сервера: ${e.response?.statusCode}');
       } else {

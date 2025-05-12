@@ -14,8 +14,7 @@ class DioService {
         // receiveTimeout: const Duration(seconds: 10),
         headers: {
           'Accept': 'application/json',
-          if (Platform.isMacOS)
-            'Origin': 'http://localhost', // Для CORS на macOS
+          if (Platform.isMacOS) 'Origin': 'http://localhost', // Для CORS
         },
       ),
     );
@@ -36,7 +35,7 @@ class DioService {
         requestHeader: true,
         requestBody: true,
         responseHeader: true,
-        responseBody: true,
+        responseBody: false,
         error: true,
       ),
       InterceptorsWrapper(

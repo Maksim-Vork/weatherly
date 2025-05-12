@@ -1,8 +1,8 @@
-import 'package:forecast/features/Weather/domain/entity/codition.dart';
+import 'package:forecast/features/Weather/domain/entity/condition.dart';
 
 class Current {
   final double temperature;
-  final Codition condition;
+  final Condition condition;
 
   Current(this.temperature, this.condition);
 }

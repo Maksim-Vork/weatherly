@@ -1,4 +1,5 @@
 import 'package:forecast/features/Weather/data/models/forecast_day_model.dart';
+import 'package:forecast/features/Weather/domain/entity/forecast.dart';
 
 class ForecastModel {
   final List<ForecastDayModel> forecastDay;
@@ -6,7 +7,7 @@ class ForecastModel {
   ForecastModel({required this.forecastDay});
 
   factory ForecastModel.fromJson(Map<String, dynamic> json) {
-    final List<dynamic> forecastDaysJson = json['forecast']['forecastday'];
+    final List<dynamic> forecastDaysJson = json['forecastday'];
 
     return ForecastModel(
       forecastDay:
@@ -14,5 +15,8 @@ class ForecastModel {
               .map((dayJson) => ForecastDayModel.fromJson(dayJson))
               .toList(),
     );
+  }
+  Forecast toEntity() {
+    return Forecast(forecastDay: forecastDay.map((e) => e.toEntity()).toList());
   }
 }

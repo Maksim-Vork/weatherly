@@ -35,7 +35,7 @@ class DioService {
         requestHeader: true,
         requestBody: true,
         responseHeader: true,
-        responseBody: false,
+        responseBody: true,
         error: true,
       ),
       InterceptorsWrapper(

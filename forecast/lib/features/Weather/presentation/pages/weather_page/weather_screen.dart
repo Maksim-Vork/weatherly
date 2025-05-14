@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forecast/features/City/domain/usecase/get_city_usecase.dart';
+import 'package:forecast/features/Settings/presentation/pages/setting_screen.dart';
 import 'package:forecast/features/Weather/domain/entity/forecast_day.dart';
 import 'package:forecast/features/Weather/domain/entity/hour.dart';
 import 'package:forecast/features/Weather/domain/entity/weather.dart';
 import 'package:forecast/features/Weather/domain/usecase/get_current_weather_usecase.dart';
 import 'package:forecast/features/Weather/presentation/bloc/weather_bloc.dart';
 import 'package:forecast/features/Weather/presentation/bloc/weather_event.dart';
+
 import 'package:forecast/features/Weather/presentation/bloc/weather_state.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
@@ -14,6 +16,7 @@ import 'package:intl/intl.dart';
 class WeatherScreen extends StatelessWidget {
   final GetCityUsecase getCityUsecase;
   final GetCurrentWeatherUsecase getCurrentWeatherUsecase;
+
   const WeatherScreen({
     super.key,
     required this.getCityUsecase,
@@ -22,22 +25,47 @@ class WeatherScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create:
-          (context) =>
-              WeatherBloc(getCityUsecase, getCurrentWeatherUsecase)
-                ..add(GetWeatherEvent()),
-      child: BlocBuilder<WeatherBloc, WeatherState>(
-        builder: (context, state) {
-          if (state is WeatherLoading) {
-            return Center(child: CircularProgressIndicator());
-          } else if (state is WeatherLoaded) {
-            return HomeSrceen(weather: state.weather);
-          } else {
-            return Center(child: Text('Ошибка отображения экрана погоды'));
-          }
-        },
-      ),
+    // Получаем WeatherBloc из контекста
+    final weatherBloc = BlocProvider.of<WeatherBloc>(context);
+
+    // Вызываем событие при первом построении виджета
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (weatherBloc.state is WeatherInitial) {
+        weatherBloc.add(GetWeatherEvent());
+      }
+    });
+
+    return BlocBuilder<WeatherBloc, WeatherState>(
+      builder: (context, state) {
+        if (state is WeatherLoading) {
+          return Scaffold(body: Center(child: CircularProgressIndicator()));
+        } else if (state is WeatherLoaded) {
+          return HomeSrceen(weather: state.weather);
+        } else if (state is WeatherError) {
+          return Scaffold(body: Center(child: Text(state.error)));
+        } else if (state is WeatherInitial) {
+          return Scaffold(
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Состояние WeatherInitial'),
+                  ElevatedButton(
+                    onPressed: () {
+                      weatherBloc.add(GetWeatherEvent());
+                    },
+                    child: Text('Повторить'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else {
+          return Scaffold(
+            body: Center(child: Text('Ошибка отображения экрана погоды')),
+          );
+        }
+      },
     );
   }
 }
@@ -98,153 +126,187 @@ class _HomeSrceenState extends State<HomeSrceen> {
               ],
             ),
             IconButton(
-              padding: EdgeInsets.all(0),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingScreen()),
+                );
+              },
               icon: Icon(Icons.settings, size: 34),
             ),
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 13),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: 55),
-              Center(
-                child: Column(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF0059B7), Color(0xFFA1CEFF)],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 13),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: 55),
+                Center(
+                  child: Column(
+                    children: [
+                      Image.network(
+                        'https:${weather.current.condition.icon}',
+                        width: 120,
+                        height: 120,
+                        fit: BoxFit.contain,
+                        filterQuality: FilterQuality.high,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            weather.current.temperature.toInt().toString(),
+                            style: const TextStyle(
+                              fontSize: 100,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.only(top: 15),
+                            child: Text(
+                              '°',
+                              style: TextStyle(
+                                fontSize: 40,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '${weather.forecast.forecastDay[0].day.mintempC.toInt()}°',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            '/',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            '${weather.forecast.forecastDay[0].day.maxtempC.toInt()}°',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        weather.nameCity,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                ElevatedButton(
+                  onPressed: () {
+                    BlocProvider.of<WeatherBloc>(
+                      context,
+                    ).add(GetWeatherEvent());
+                  },
+                  child: Text('Обновить'),
+                ),
+                SizedBox(height: 65),
+                Container(
+                  width: double.infinity,
+                  height: 92,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 5,
+                      vertical: 8,
+                    ),
+                    child: ListView.separated(
+                      controller: _scrollController,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return WeatherHour(
+                          hour: weather.forecast.forecastDay[0].hour[index],
+                        );
+                      },
+                      separatorBuilder:
+                          (context, index) =>
+                              Container(width: 2, color: Color(0xFFDDDDDD)),
+                      itemCount: weather.forecast.forecastDay[0].hour.length,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 13),
+                Row(
                   children: [
-                    Image.network(
-                      'https:${weather.current.condition.icon}',
-                      width: 120,
-                      height: 120,
-                      fit: BoxFit.contain,
-                      filterQuality: FilterQuality.high,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          weather.current.temperature.toInt().toString(),
-                          style: const TextStyle(
-                            fontSize: 100,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(top: 15),
-                          child: Text(
-                            '°',
-                            style: TextStyle(fontSize: 40, color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '${weather.forecast.forecastDay[0].day.mintempC.toInt()}°',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Text(
-                          '/',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Text(
-                          '${weather.forecast.forecastDay[0].day.maxtempC.toInt()}°',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 5),
                     Text(
-                      weather.nameCity,
+                      'Погода на неделю',
                       style: TextStyle(
-                        fontSize: 20,
+                        fontSize: 15,
                         fontWeight: FontWeight.w500,
-                        color: Colors.white,
                       ),
                     ),
                   ],
                 ),
-              ),
-              SizedBox(height: 65),
-              Container(
-                width: double.infinity,
-                height: 92,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 5,
-                    vertical: 8,
-                  ),
-                  child: ListView.separated(
-                    controller: _scrollController,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      return WeatherHour(
-                        hour: weather.forecast.forecastDay[0].hour[index],
-                      );
-                    },
-                    separatorBuilder:
-                        (context, index) =>
-                            Container(width: 2, color: Color(0xFFDDDDDD)),
-                    itemCount: weather.forecast.forecastDay[0].hour.length,
-                  ),
-                ),
-              ),
-              SizedBox(height: 13),
-              Row(
-                children: [
-                  Text(
-                    'Погода на неделю',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-                  ),
-                ],
-              ),
 
-              SizedBox(height: 6),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 11, vertical: 7),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: weather.forecast.forecastDay.length,
-                    itemBuilder: (context, index) {
-                      return WeatherForecastWeek(
-                        forecastDay: listForecast[index],
-                      );
-                    },
+                SizedBox(height: 6),
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min, // Важно!
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 11,
+                          vertical: 7,
+                        ),
+                        child: Column(
+                          children: List.generate(
+                            weather.forecast.forecastDay.length,
+                            (index) => WeatherForecastWeek(
+                              forecastDay: listForecast[index],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              SizedBox(height: 50),
-            ],
+                SizedBox(height: 50),
+              ],
+            ),
           ),
         ),
       ),

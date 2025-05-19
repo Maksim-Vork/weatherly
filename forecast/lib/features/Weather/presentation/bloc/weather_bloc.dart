@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:forecast/features/City/domain/usecase/get_city_usecase.dart';
 import 'package:forecast/features/City/domain/usecase/update_city_usecase.dart';
@@ -25,6 +23,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   void _onGet(GetWeatherEvent event, Emitter<WeatherState> emit) async {
     try {
       emit(WeatherLoading());
+
       final String city = await getCityUsecase();
       final Weather weather = await getCurrentWeatherUsecase(city);
       emit(WeatherLoaded(weather));

@@ -1,4 +1,4 @@
-import 'package:forecast/features/Weather/data/models/forecast_day_model.dart';
+import 'package:forecast/features/Weather/data/models/models.dart';
 import 'package:forecast/features/Weather/domain/entity/forecast.dart';
 
 class ForecastModel {

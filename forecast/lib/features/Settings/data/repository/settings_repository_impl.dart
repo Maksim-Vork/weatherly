@@ -5,6 +5,7 @@ class SettingsRepositoryImpl extends SettingsRepository {
   final SettingsDataSource settingsDataSource;
 
   SettingsRepositoryImpl({required this.settingsDataSource});
+
   @override
   Future<void> changeTheme(bool theme) async {
     settingsDataSource.changeTheme(theme);

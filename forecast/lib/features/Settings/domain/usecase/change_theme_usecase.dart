@@ -5,10 +5,7 @@ class ChangeThemeUsecase {
   final SettingsRepository settingsRepository;
   final GetThemeDataUsecase getThemeData;
 
-  ChangeThemeUsecase({
-    required this.settingsRepository,
-    required this.getThemeData,
-  });
+  ChangeThemeUsecase(this.settingsRepository, this.getThemeData);
 
   Future<void> call() async {
     final bool theme = await getThemeData();

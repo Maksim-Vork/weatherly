@@ -1,19 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:forecast/features/City/domain/usecase/get_city_usecase.dart';
 import 'package:forecast/features/City/presentation/bloc/city_bloc.dart';
 import 'package:forecast/features/City/presentation/bloc/city_event.dart';
-import 'package:forecast/features/Weather/domain/usecase/get_current_weather_usecase.dart';
 import 'package:forecast/features/Weather/presentation/pages/weather_page/weather_screen.dart';
 
 class InputLoginScreen extends StatelessWidget {
-  final GetCityUsecase getCityUsecase;
-  final GetCurrentWeatherUsecase getCurrentWeatherUsecase;
-  InputLoginScreen({
-    super.key,
-    required this.getCityUsecase,
-    required this.getCurrentWeatherUsecase,
-  });
+  InputLoginScreen({super.key});
 
   final TextEditingController _controllerCity = TextEditingController();
 
@@ -70,13 +62,7 @@ class InputLoginScreen extends StatelessWidget {
               ).add(AddCityEvent(_controllerCity.text));
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder:
-                      (context) => WeatherScreen(
-                        getCityUsecase: getCityUsecase,
-                        getCurrentWeatherUsecase: getCurrentWeatherUsecase,
-                      ),
-                ),
+                MaterialPageRoute(builder: (context) => WeatherScreen()),
               );
             },
             child: Text(

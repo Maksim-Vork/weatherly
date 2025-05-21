@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:forecast/features/Settings/presentation/pages/widgets/city_settings.dart';
-import 'package:forecast/features/Settings/presentation/pages/widgets/app_bar_settings.dart';
-import 'package:forecast/features/Settings/presentation/pages/widgets/theme_settings.dart';
+import 'package:forecast/features/Settings/presentation/pages/widgets/widgets.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});

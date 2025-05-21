@@ -1,7 +1,7 @@
 import 'package:forecast/features/City/domain/repository/abstract_city_repository.dart';
 
 class UpdateCityUsecase {
-  final AbstractCityRepository abstractCityRepository;
+  final CityRepository abstractCityRepository;
 
   UpdateCityUsecase(this.abstractCityRepository);
 

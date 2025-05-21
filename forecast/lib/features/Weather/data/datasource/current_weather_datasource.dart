@@ -1,4 +1,4 @@
-import 'package:forecast/core/dio_service.dart';
+import 'package:forecast/core/service/dio_service.dart';
 import 'package:forecast/features/Weather/data/models/weather_model.dart';
 
 class CurrentWeatherDatasource {

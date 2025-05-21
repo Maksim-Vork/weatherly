@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:forecast/features/City/domain/usecase/get_city_usecase.dart';
 import 'package:forecast/features/Weather/domain/entity/weather.dart';
-import 'package:forecast/features/Weather/domain/usecase/get_current_weather_usecase.dart';
 import 'package:forecast/features/Weather/presentation/bloc/weather_bloc.dart';
 import 'package:forecast/features/Weather/presentation/bloc/weather_event.dart';
 import 'package:forecast/features/Weather/presentation/bloc/weather_state.dart';
@@ -12,14 +10,7 @@ import 'package:forecast/features/Weather/presentation/pages/weather_page/widget
 import 'package:forecast/features/Weather/presentation/pages/weather_page/widgets/week_weather.dart';
 
 class WeatherScreen extends StatelessWidget {
-  final GetCityUsecase getCityUsecase;
-  final GetCurrentWeatherUsecase getCurrentWeatherUsecase;
-
-  const WeatherScreen({
-    super.key,
-    required this.getCityUsecase,
-    required this.getCurrentWeatherUsecase,
-  });
+  const WeatherScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

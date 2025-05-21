@@ -1,4 +1,4 @@
-abstract class AbstractCityRepository {
+abstract class CityRepository {
   Future<void> saveCity(String city);
   Future<String> getCity();
 }

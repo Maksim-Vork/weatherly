@@ -4,7 +4,7 @@ import 'package:forecast/features/Weather/data/models/weather_model.dart';
 import 'package:forecast/features/Weather/domain/entity/weather.dart';
 import 'package:forecast/features/Weather/domain/repository/current_weather_repository.dart';
 
-class WeatherRepositoryImpl extends CurrentWeatherRepository {
+class WeatherRepositoryImpl extends WeatherRepository {
   final CurrentWeatherDatasource currentWeatherDatasource;
 
   WeatherRepositoryImpl(this.currentWeatherDatasource);

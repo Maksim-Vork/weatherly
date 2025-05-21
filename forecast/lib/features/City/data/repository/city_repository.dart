@@ -1,10 +1,10 @@
 import 'package:forecast/features/City/data/datasource/local_data_source.dart';
 import 'package:forecast/features/City/domain/repository/abstract_city_repository.dart';
 
-class CityRepository extends AbstractCityRepository {
+class CityRepositoryImpl extends CityRepository {
   final LocalDataSource localDataSource;
 
-  CityRepository(this.localDataSource);
+  CityRepositoryImpl(this.localDataSource);
   @override
   Future<String> getCity() async {
     final String? city = await localDataSource.getCity();

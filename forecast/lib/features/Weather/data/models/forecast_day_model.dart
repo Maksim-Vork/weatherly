@@ -1,5 +1,4 @@
-import 'package:forecast/features/Weather/data/models/day_model.dart';
-import 'package:forecast/features/Weather/data/models/hour_model.dart';
+import 'package:forecast/features/Weather/data/models/models.dart';
 import 'package:forecast/features/Weather/domain/entity/forecast_day.dart';
 
 class ForecastDayModel {

@@ -1,8 +1,8 @@
-import 'package:forecast/features/Weather/data/repository/weather_repository_impl.dart';
 import 'package:forecast/features/Weather/domain/entity/weather.dart';
+import 'package:forecast/features/Weather/domain/repository/current_weather_repository.dart';
 
 class GetCurrentWeatherUsecase {
-  final WeatherRepositoryImpl repository;
+  final WeatherRepository repository;
 
   GetCurrentWeatherUsecase(this.repository);
 

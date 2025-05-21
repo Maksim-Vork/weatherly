@@ -1,14 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:forecast/features/Settings/domain/usecase/change_theme_usecase.dart';
-import 'package:forecast/features/Settings/domain/usecase/get_theme_data_usecase.dart';
-import 'package:forecast/features/Settings/presentation/bloc/settings_event.dart';
-import 'package:forecast/features/Settings/presentation/bloc/settings_state.dart';
+import 'package:forecast/core/locator/service_locator.dart';
+import 'package:forecast/features/Settings/domain/usecase/usecases.dart';
+import 'package:forecast/features/Settings/presentation/bloc/bloc.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
-  final ChangeThemeUsecase changeTheme;
-  final GetThemeDataUsecase getThemeData;
-  SettingsBloc(this.changeTheme, this.getThemeData)
-    : super(SettingsState(themeData: false)) {
+  final ChangeThemeUsecase changeTheme = getIt<ChangeThemeUsecase>();
+  final GetThemeDataUsecase getThemeData = getIt<GetThemeDataUsecase>();
+  SettingsBloc() : super(SettingsState(themeData: false)) {
     on<GetThemeEvent>(_onGetTheme);
     on<ChangeThemeEvent>(_onChangeTheme);
   }

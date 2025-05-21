@@ -3,7 +3,7 @@ import 'package:forecast/features/Settings/domain/repository/settings_repository
 class GetThemeDataUsecase {
   final SettingsRepository settingsRepository;
 
-  GetThemeDataUsecase({required this.settingsRepository});
+  GetThemeDataUsecase(this.settingsRepository);
 
   Future<bool> call() async {
     final bool theme = await settingsRepository.getThemeData();

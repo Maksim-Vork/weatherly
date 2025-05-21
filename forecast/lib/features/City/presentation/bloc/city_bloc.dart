@@ -1,16 +1,13 @@
-import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:forecast/features/City/domain/usecase/get_city_usecase.dart';
-import 'package:forecast/features/City/domain/usecase/save_city_usecase.dart';
-import 'package:forecast/features/City/presentation/bloc/city_event.dart';
-import 'package:forecast/features/City/presentation/bloc/city_state.dart';
+import 'package:forecast/core/locator/service_locator.dart';
+import 'package:forecast/features/City/domain/usecase/usecases.dart';
+import 'package:forecast/features/City/presentation/bloc/bloc.dart';
 
 class CityBloc extends Bloc<CityEvent, CityState> {
-  final SaveCityUsecase saveCityUsecase;
-  final GetCityUsecase getCityUsecase;
+  final SaveCityUsecase saveCityUsecase = getIt<SaveCityUsecase>();
+  final GetCityUsecase getCityUsecase = getIt<GetCityUsecase>();
 
-  CityBloc(this.saveCityUsecase, this.getCityUsecase) : super(CityInitial()) {
+  CityBloc() : super(CityInitial()) {
     on<AddCityEvent>(_onAddCity);
     on<CheckCityEvent>(_onCheck);
   }

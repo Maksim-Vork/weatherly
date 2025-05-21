@@ -1,4 +1,4 @@
-import 'package:forecast/features/Weather/data/models/condition_model.dart';
+import 'package:forecast/features/Weather/data/models/models.dart';
 import 'package:forecast/features/Weather/domain/entity/current.dart';
 
 class CurrentModel {

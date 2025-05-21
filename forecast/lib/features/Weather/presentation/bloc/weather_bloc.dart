@@ -1,21 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:forecast/core/locator/service_locator.dart';
 import 'package:forecast/features/City/domain/usecase/get_city_usecase.dart';
 import 'package:forecast/features/City/domain/usecase/update_city_usecase.dart';
 import 'package:forecast/features/Weather/domain/entity/weather.dart';
 import 'package:forecast/features/Weather/domain/usecase/get_current_weather_usecase.dart';
-import 'package:forecast/features/Weather/presentation/bloc/weather_event.dart';
-
-import 'package:forecast/features/Weather/presentation/bloc/weather_state.dart';
+import 'package:forecast/features/Weather/presentation/bloc/bloc.dart';
 
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
-  final UpdateCityUsecase updateCityUsecase;
-  final GetCityUsecase getCityUsecase;
-  final GetCurrentWeatherUsecase getCurrentWeatherUsecase;
-  WeatherBloc(
-    this.getCityUsecase,
-    this.getCurrentWeatherUsecase,
-    this.updateCityUsecase,
-  ) : super(WeatherInitial()) {
+  final UpdateCityUsecase updateCityUsecase = getIt<UpdateCityUsecase>();
+  final GetCityUsecase getCityUsecase = getIt<GetCityUsecase>();
+  final GetCurrentWeatherUsecase getCurrentWeatherUsecase =
+      getIt<GetCurrentWeatherUsecase>();
+  WeatherBloc() : super(WeatherInitial()) {
     on<GetWeatherEvent>(_onGet);
     on<UpdatedWeatherEvent>(_onUpdated);
   }

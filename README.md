@@ -72,6 +72,7 @@ lib/
 ```
 
 ---
+<img width="343" height="739" alt="image" src="https://github.com/user-attachments/assets/ba6f0fc4-4e3a-4c46-ad67-049453a63937" />
 
 ## 🤝 Контрибьюция  
 
